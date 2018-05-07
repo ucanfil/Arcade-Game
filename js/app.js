@@ -1,6 +1,7 @@
+
 // Our base class for game entitites
 class GameEntities {
-  constructor(x, y, width = 70, height = 88, sprite = 'images/enemy-bug.png') {
+  constructor(x, y, width, height, sprite = 'images/enemy-bug.png') {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -23,7 +24,6 @@ class Enemy extends GameEntities {
 
   render() {
     super.render();
-    ctx.drawImage(Resources.get(this.sprite), this.x - this.width / 2, this.y);
   };
 
   update(dt) {
@@ -38,26 +38,25 @@ class Enemy extends GameEntities {
 
 // Player class inherits from GameEntities
 class Player extends GameEntities {
-  constructor(x = 252.5, y = 456.5, width, height, sprite) {
+  constructor(x = 252.5, y = 456.5, width = 70, height = 88, sprite) {
     super(x, y, width, height, sprite);
     this.sprite = 'images/char-boy.png';
   }
 
   update(dt) {
-    const item = this; // Neded this for closure!
+    const player1 = this; // Needed this for closure!
     const tolerance = 25;
     allEnemies.forEach(function(enemy) {
-      if (item.x < enemy.x + enemy.width - tolerance && item.x + item.width - tolerance > enemy.x &&
-        item.y < enemy.y + enemy.height - tolerance && item.height - tolerance + item.y > enemy.y) {
-          item.x = 252.5;
-          item.y = 465;
+      if (player1.x < enemy.x + enemy.width - tolerance && player1.x + player1.width - tolerance > enemy.x &&
+        player1.y < enemy.y + enemy.height - tolerance && player1.height - tolerance + player1.y > enemy.y) {
+          player1.x = 252.5;
+          player1.y = 465;
       };
     });
-
   };
 
   render() {
-    ctx.drawImage(Resources.get(this.sprite), this.x - this.width / 2, this.y);
+    super.render();
   }
 
   handleInput(direction) {
@@ -69,7 +68,7 @@ class Player extends GameEntities {
         this.x < 454.5 ? this.x += 101 : this.x;
         break;
       case 'up':
-        this.y > 41.5 ? this.y -= 83 : this.y;
+        this.y > 50 ? this.y -= 83 : this.y;
         break;
       case 'down':
         this.y < 456.5 ? this.y += 83 : this.y;
@@ -78,6 +77,62 @@ class Player extends GameEntities {
   }
 };
 
+// Gem class extends on GameEntities
+class Gem extends GameEntities {
+  constructor(x, y, width = 100, height = 114, sprite) {
+    super(x, y, width, height, sprite);
+    this.sprite = 'images/Gem Green.png';
+    this.x = 50.5 + Math.floor(Math.random() * 5) * 101;
+    this.y = 135 + Math.floor(Math.random() * 3) * 83;
+    this.count = 0;
+  };
+
+  render() {
+    super.render();
+  };
+
+  update() {
+    const tolerance = 25;
+    const gem1 = this;
+    if (this.x < player.x + player.width - tolerance && this.x + this.width - tolerance > player.x &&
+      this.y < player.y + player.height - tolerance && this.height - tolerance + this.y > player.y) {
+        this.count++;
+        this.x = -300;
+        this.y = -300;
+        setTimeout(function() {
+            gem1.x = 50.5 + Math.floor(Math.random() * 5) * 101;
+            gem1.y = 135 + Math.floor(Math.random() * 3) * 83;
+        }, 3000);
+    };
+  };
+};
+
+class Heart extends Gem {
+  constructor(x, y, width = 91, height = 91, sprite) {
+    super(x, y, width, height, sprite);
+    this.sprite = 'images/Heart.png';
+  }
+
+  render() {
+    if (gem.count % 4 === 0 && gem.count !== 0) {
+      super.render();
+    };
+  };
+
+  update() {
+    const tolerance = 25;
+    const heart1 = this;
+    if (this.x < player.x + player.width - tolerance && this.x + this.width - tolerance > player.x &&
+      this.y < player.y + player.height - tolerance && this.height - tolerance + this.y > player.y) {
+      this.count++;
+      this.x = -300;
+      this.y = -300;
+    };
+  };
+};
+
+const gem = new Gem();
+const heart = new Heart();
 
 const level = 'easy';
 const numEnemies = level === 'hard' ? 12 : level === 'medium' ? 9 : 6;
@@ -92,15 +147,11 @@ for (let i = 0; i < numOfEnemies; i++) {
   allEnemies.push(enemy);
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+// Instantiating player object.
 const player = new Player(252.5, 465);
 
-
-
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Player.handleInput() method.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',

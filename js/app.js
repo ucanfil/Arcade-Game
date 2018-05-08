@@ -1,3 +1,36 @@
+const players = document.querySelector("ul");
+const start = document.querySelector("#start");
+const gameIntro = document.querySelector("#game-intro");
+const gameLevels = document.querySelectorAll(".game-level");
+
+
+let level = "";
+let numEnemies = {
+  'Hard': 5,
+  'Medium': 3,
+  'Easy': 2
+};
+
+
+// Clicking start button removes the intro page
+start.addEventListener("click", function () {
+  gameIntro.style.display = "none";
+});
+
+// Adding an event listener to player selection which sets player objects sprite value
+players.addEventListener("click", function (e) {
+  if (e.target.nodeName === "BUTTON") {
+    player.sprite = e.target.firstElementChild.getAttribute("src");
+  } else if (e.target.nodeName === "IMG") {
+    player.sprite = e.target.getAttribute("src");
+  };
+});
+
+gameLevels.forEach(item => item.addEventListener("click", function (e) {
+  level = e.target.textContent;
+  newEnemies();
+})
+);
 
 // Our base class for game entitites
 class GameEntities {
@@ -16,7 +49,7 @@ class GameEntities {
 
 // Enemy class inherits from GameEntities
 class Enemy extends GameEntities {
-  constructor(x, y, width = 100, height = 79, sprite, speed = 100, num = 5) {
+  constructor(x, y, width = 100, height = 79, sprite, speed = 100, num = 3) {
     super(x, y, width, height, sprite);
     this.speed = speed;
     this.num = num;
@@ -41,6 +74,7 @@ class Player extends GameEntities {
   constructor(x = 252.5, y = 456.5, width = 70, height = 88, sprite) {
     super(x, y, width, height, sprite);
     this.sprite = 'images/char-boy.png';
+    this.level = "";
   }
 
   update(dt) {
@@ -104,6 +138,11 @@ class Gem extends GameEntities {
             gem1.y = 135 + Math.floor(Math.random() * 3) * 83;
         }, 3000);
     };
+
+    if (this.count >= 10 && player.y === 50) {
+      console.log("Congrats");
+      setTimeout(init, 2000);
+    }
   };
 };
 
@@ -131,24 +170,28 @@ class Heart extends Gem {
   };
 };
 
+// Instantiating objects
+const player = new Player(252.5, 465);
 const gem = new Gem();
 const heart = new Heart();
 
-const level = 'easy';
-const numEnemies = level === 'hard' ? 12 : level === 'medium' ? 9 : 6;
-
-
-const numOfEnemies = 2;
-let enemy;
+// Instantiating enemies
 const allEnemies = [];
 
-for (let i = 0; i < numOfEnemies; i++) {
-  enemy = new Enemy(-100, 135, 100, 79, 'images/enemy-bug.png', 100, 3);
-  allEnemies.push(enemy);
-}
+function newEnemies() {
+  let enemy;
+  let speedFactor = {
+    'Hard': 1000,
+    'Medium': 800,
+    'Easy': 600,
+  };
+  for (let i = 0; i < numEnemies[level]; i++) {
+    enemy = new Enemy(-100, 135, 100, 79, 'images/enemy-bug.png', speedFactor[level], 3);
+    allEnemies.push(enemy);
+  }
+};
 
-// Instantiating player object.
-const player = new Player(252.5, 465);
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method.
@@ -159,6 +202,5 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });

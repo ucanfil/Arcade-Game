@@ -51,7 +51,7 @@ class GameEntities {
 class Enemy extends GameEntities {
   constructor(x, y, width = 100, height = 79, sprite, speed = 100, num = 3) {
     super(x, y, width, height, sprite);
-    this.speed = speed;
+    this.speed = Math.max(100, Math.random() * speed * 100);
     this.num = num;
   }
 
@@ -63,7 +63,7 @@ class Enemy extends GameEntities {
     if (this.x > 505 + this.width) {
       this.x = -100 - Math.floor(Math.random() * this.num) * 100;
       this.y = 135 + Math.floor(Math.random() * this.num) * 83;
-      this.speed = Math.max(100, Math.floor(Math.random() * this.num) * 100);
+      this.speed = Math.max(100, Math.random() * this.num * 100);
     };
     this.x += this.speed * dt;
   }
@@ -141,7 +141,6 @@ class Gem extends GameEntities {
 
     if (this.count >= 10 && player.y === 50) {
       console.log("Congrats");
-      setTimeout(init, 2000);
     }
   };
 };

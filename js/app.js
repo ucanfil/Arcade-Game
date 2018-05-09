@@ -1,10 +1,12 @@
+// Variables needed for DOM manipulation
 const players = document.querySelector("ul");
 const start = document.querySelector("#start");
 const gameIntro = document.querySelector("#game-intro");
 const gameLevels = document.querySelectorAll(".game-level");
-let isPaused = false;
-let isGameOver = false;
-
+const gemInfo = document.querySelector("#gem-info");
+const gemCount = document.querySelector("#gem-count");
+const lifeCount = document.querySelector("#life-count");
+const gemCountMessage = document.querySelector("#message");
 
 let level = "";
 let numEnemies = {
@@ -13,10 +15,14 @@ let numEnemies = {
   'Easy': 2
 };
 
+gemInfo.style.display = "none";
+let isPaused = false;
+let isGameOver = false;
 
 // Clicking start button removes the intro page
 start.addEventListener("click", function () {
   gameIntro.style.display = "none";
+  gemInfo.style.display = "block";
 });
 
 // Adding an event listener to player selection which sets player objects sprite value
@@ -90,6 +96,7 @@ class Player extends GameEntities {
           player1.x = 252.5;
           player1.y = 465;
           player1.lives--;
+          lifeCount.textContent = player1.lives;
       };
     });
   };
@@ -138,6 +145,10 @@ class Gem extends GameEntities {
     if (this.x < player.x + player.width - tolerance && this.x + this.width - tolerance > player.x &&
       this.y < player.y + player.height - tolerance && this.height - tolerance + this.y > player.y) {
         this.count++;
+        gemCount.textContent = this.count;
+        if (this.count >= 10) {
+          gemCountMessage.textContent = "Go to creek now!";
+        };
         this.x = -300;
         this.y = -300;
         setTimeout(function() {

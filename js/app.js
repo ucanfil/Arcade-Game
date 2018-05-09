@@ -2,6 +2,8 @@ const players = document.querySelector("ul");
 const start = document.querySelector("#start");
 const gameIntro = document.querySelector("#game-intro");
 const gameLevels = document.querySelectorAll(".game-level");
+let isPaused = false;
+let isGameOver = false;
 
 
 let level = "";
@@ -29,8 +31,7 @@ players.addEventListener("click", function (e) {
 gameLevels.forEach(item => item.addEventListener("click", function (e) {
   level = e.target.textContent;
   newEnemies();
-})
-);
+}));
 
 // Our base class for game entitites
 class GameEntities {
@@ -44,6 +45,8 @@ class GameEntities {
 
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x - this.width / 2, this.y);
+    gameState(isPaused, "GAME PAUSED...");
+    gameOver();
   };
 };
 
@@ -75,6 +78,7 @@ class Player extends GameEntities {
     super(x, y, width, height, sprite);
     this.sprite = 'images/char-boy.png';
     this.level = "";
+    this.lives = 3;
   }
 
   update(dt) {
@@ -85,6 +89,7 @@ class Player extends GameEntities {
         player1.y < enemy.y + enemy.height - tolerance && player1.height - tolerance + player1.y > enemy.y) {
           player1.x = 252.5;
           player1.y = 465;
+          player1.lives--;
       };
     });
   };
@@ -94,19 +99,21 @@ class Player extends GameEntities {
   }
 
   handleInput(direction) {
-    switch (direction) {
-      case 'left':
-        this.x > 50.5 ? this.x -= 101 : this.x;
-        break;
-      case 'right':
-        this.x < 454.5 ? this.x += 101 : this.x;
-        break;
-      case 'up':
-        this.y > 50 ? this.y -= 83 : this.y;
-        break;
-      case 'down':
-        this.y < 456.5 ? this.y += 83 : this.y;
-        break;
+    if (!isPaused) {
+      switch (direction) {
+        case 'left':
+          this.x > 50.5 ? this.x -= 101 : this.x;
+          break;
+        case 'right':
+          this.x < 454.5 ? this.x += 101 : this.x;
+          break;
+        case 'up':
+          this.y > 50 ? this.y -= 83 : this.y;
+          break;
+        case 'down':
+          this.y < 456.5 ? this.y += 83 : this.y;
+          break;
+      }
     }
   }
 };
@@ -126,7 +133,7 @@ class Gem extends GameEntities {
   };
 
   update() {
-    const tolerance = 25;
+    const tolerance = 45;
     const gem1 = this;
     if (this.x < player.x + player.width - tolerance && this.x + this.width - tolerance > player.x &&
       this.y < player.y + player.height - tolerance && this.height - tolerance + this.y > player.y) {
@@ -138,41 +145,12 @@ class Gem extends GameEntities {
             gem1.y = 135 + Math.floor(Math.random() * 3) * 83;
         }, 3000);
     };
-
-    if (this.count >= 10 && player.y === 50) {
-      console.log("Congrats");
-    }
-  };
-};
-
-class Heart extends Gem {
-  constructor(x, y, width = 91, height = 91, sprite) {
-    super(x, y, width, height, sprite);
-    this.sprite = 'images/Heart.png';
-  }
-
-  render() {
-    if (gem.count % 4 === 0 && gem.count !== 0) {
-      super.render();
-    };
-  };
-
-  update() {
-    const tolerance = 25;
-    const heart1 = this;
-    if (this.x < player.x + player.width - tolerance && this.x + this.width - tolerance > player.x &&
-      this.y < player.y + player.height - tolerance && this.height - tolerance + this.y > player.y) {
-      this.count++;
-      this.x = -300;
-      this.y = -300;
-    };
   };
 };
 
 // Instantiating objects
 const player = new Player(252.5, 465);
 const gem = new Gem();
-const heart = new Heart();
 
 // Instantiating enemies
 const allEnemies = [];
@@ -202,4 +180,34 @@ document.addEventListener('keyup', function(e) {
         40: 'down'
     };
     player.handleInput(allowedKeys[e.keyCode]);
+
+    if (e.keyCode === 80) {
+      isPaused = !isPaused;
+      init();
+    };
 });
+
+// Game State Function
+function gameState(condition, text) {
+  if (condition) {
+    ctx.font = "50pt VT323";
+    ctx.textAlign = "center";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 3;
+    ctx.fillStyle = "white";
+    ctx.fillText(text, 505 / 2, 606 / 2);
+    ctx.strokeText(text, 505 / 2, 606 / 2);
+  };
+};
+
+
+// Function that controls the game state when game is over
+function gameOver(){
+  if (gem.count >= 10 && player.y === 50) {
+    isGameOver = true;
+    gameState(isGameOver, "YOU WON!");
+  } else if (player.lives === 0) {
+    isGameOver = true;
+    gameState(isGameOver, "YOU LOSE!");
+  };
+};

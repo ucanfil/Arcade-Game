@@ -96,3 +96,23 @@ button:hover {
 #start:hover {
   background-color: firebrick;
 }
+
+h3 img {
+  width: 20px;
+  height: 20px;
+}
+
+#gem-info {
+  position: absolute;
+  top: 5px;
+  left: 33.5%;
+}
+
+#gem-count {
+  margin-right: 15px;
+}
+
+#message {
+  margin-left: 20px;
+  color: firebrick;
+}

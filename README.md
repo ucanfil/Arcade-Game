@@ -1,6 +1,43 @@
-frontend-nanodegree-arcade-game
-===============================
+# Classic Frogger Game
 
-Students should use this [rubric](https://review.udacity.com/#!/projects/2696458597/rubric) for self-checking their submission. Make sure the functions you write are **object-oriented** - either class functions (like Player and Enemy) or class prototype functions such as Enemy.prototype.checkCollisions, and that the keyword 'this' is used appropriately within your class and class prototype functions to refer to the object the function is called upon. Also be sure that the **readme.md** file is updated with your instructions on both how to 1. Run and 2. Play your arcade game.
+This Classic Frogger Game project is made as part of Front-End Nanodegree by Udacity, in order to practice object-oriented programming concepts.
 
-For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
+## Getting Started
+
+You can simply fork the repo from [here](https://github.com/ucanfil/Arcade-Game) to your system and style/add functionalities as you wish.
+
+## Prerequisities
+
+You just need a modern browser to play this game nothing more.
+
+## Installing
+
+Clone the repository into your system and open index.html file with your browser or better yet:
+> You can play the game online [here.](https://ucanfil.github.io/Arcade-Game/)
+
+## Game Rules
+
+ - You should choose your player and game level then click "Begin Playing!" button to begin the game.
+ - At first you have 3 lives, every time you get bitten by a bug you lose one of your lives.
+ - You should collect at least 10 gems before reaching the creek.
+ - If you lose all your lives on the way you lose the game.
+ - Once you have 10 gems or more, you should reach to creek for winning the game.
+
+## Playing Instructions
+
+ - Use arrow keys: ← ↑ → ↓ for moving the player.
+ - Pressing "P" pauses the game.
+
+## Built With
+
+  * Pure vanilla JavaScript with mostly using Object Oriented Programming concepts.
+  * Html5
+  * Css3
+
+## Authors
+
+- Burak Tilek - [Ucanfil](https://github.com/ucanfil)
+
+## Acknowledgments
+
+* engine.js provided by [Udacity](https://github.com/udacity/frontend-nanodegree-arcade-game)

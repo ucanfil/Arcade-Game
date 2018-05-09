@@ -55,14 +55,17 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+        let animation = win.requestAnimationFrame(main);
+        if (isPaused || isGameOver) {
+          cancelAnimationFrame(animation);
+        }
     }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
-    function init() {
+    global.init = function init() {
         reset();
         lastTime = Date.now();
         main();
@@ -95,7 +98,6 @@ var Engine = (function(global) {
         });
         player.update();
         gem.update();
-        heart.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -157,7 +159,6 @@ var Engine = (function(global) {
 
         player.render();
         gem.render();
-        heart.render();
     }
 
     /* This function does nothing but it could have been a good place to

@@ -8,7 +8,7 @@ const gemCount = document.querySelector("#gem-count");
 const lifeCount = document.querySelector("#life-count");
 const gemCountMessage = document.querySelector("#message");
 
-let level = "";
+let level = "Easy";
 let numEnemies = {
   'Hard': 5,
   'Medium': 3,
@@ -36,7 +36,6 @@ players.addEventListener("click", function (e) {
 
 gameLevels.forEach(item => item.addEventListener("click", function (e) {
   level = e.target.textContent;
-  newEnemies();
 }));
 
 // Our base class for game entitites
@@ -165,6 +164,7 @@ const gem = new Gem();
 
 // Instantiating enemies
 const allEnemies = [];
+newEnemies();
 
 function newEnemies() {
   let enemy;

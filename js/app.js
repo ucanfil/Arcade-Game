@@ -1,40 +1,40 @@
 // Variables needed for DOM manipulation
-const players = document.querySelector("ul");
-const start = document.querySelector("#start");
-const gameIntro = document.querySelector("#game-intro");
-const gameLevels = document.querySelectorAll(".game-level");
-const gemInfo = document.querySelector("#gem-info");
-const gemCount = document.querySelector("#gem-count");
-const lifeCount = document.querySelector("#life-count");
-const gemCountMessage = document.querySelector("#message");
+const players = document.querySelector('ul'),
+      start = document.querySelector('#start'),
+      gameIntro = document.querySelector('#game-intro'),
+      gameLevels = document.querySelectorAll('.game-level'),
+      gemInfo = document.querySelector('#gem-info'),
+      gemCount = document.querySelector('#gem-count'),
+      lifeCount = document.querySelector('#life-count'),
+      gemCountMessage = document.querySelector('#message');
 
-let level = "Easy";
-let numEnemies = {
-  'Hard': 5,
-  'Medium': 3,
-  'Easy': 2
+let level = 'Easy';
+const numEnemies = {
+  Hard: 5,
+  Medium: 3,
+  Easy: 2,
 };
 
-gemInfo.style.display = "none";
+gemInfo.style.display = 'none';
 let isPaused = false;
 let isGameOver = false;
 
 // Clicking start button removes the intro page
-start.addEventListener("click", function () {
-  gameIntro.style.display = "none";
-  gemInfo.style.display = "block";
+start.addEventListener('click', () => {
+  gameIntro.style.display = 'none';
+  gemInfo.style.display = 'block';
 });
 
 // Adding an event listener to player selection which sets player objects sprite value
-players.addEventListener("click", function (e) {
-  if (e.target.nodeName === "BUTTON") {
-    player.sprite = e.target.firstElementChild.getAttribute("src");
-  } else if (e.target.nodeName === "IMG") {
-    player.sprite = e.target.getAttribute("src");
-  };
+players.addEventListener('click', (e) => {
+  if (e.target.nodeName === 'BUTTON') {
+    player.sprite = e.target.firstElementChild.getAttribute('src');
+  } else if (e.target.nodeName === 'IMG') {
+    player.sprite = e.target.getAttribute('src');
+  }
 });
 
-gameLevels.forEach(item => item.addEventListener("click", function (e) {
+gameLevels.forEach(item => item.addEventListener('click', (e) => {
   level = e.target.textContent;
 }));
 
@@ -46,14 +46,14 @@ class GameEntities {
     this.width = width;
     this.height = height;
     this.sprite = sprite;
-  };
+  }
 
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x - this.width / 2, this.y);
-    gameState(isPaused, "GAME PAUSED...");
+    gameState(isPaused, 'GAME PAUSED...');
     gameOver();
-  };
-};
+  }
+}
 
 // Enemy class inherits from GameEntities
 class Enemy extends GameEntities {
@@ -65,14 +65,14 @@ class Enemy extends GameEntities {
 
   render() {
     super.render();
-  };
+  }
 
   update(dt) {
     if (this.x > 505 + this.width) {
       this.x = -100 - Math.floor(Math.random() * this.num) * 100;
       this.y = 135 + Math.floor(Math.random() * this.num) * 83;
       this.speed = Math.max(100, Math.random() * this.num * 100);
-    };
+    }
     this.x += this.speed * dt;
   }
 }
@@ -82,23 +82,23 @@ class Player extends GameEntities {
   constructor(x = 252.5, y = 456.5, width = 70, height = 88, sprite) {
     super(x, y, width, height, sprite);
     this.sprite = 'images/char-boy.png';
-    this.level = "";
+    this.level = '';
     this.lives = 3;
   }
 
   update(dt) {
     const player1 = this; // Needed this for closure!
     const tolerance = 25;
-    allEnemies.forEach(function(enemy) {
+    allEnemies.forEach((enemy) => {
       if (player1.x < enemy.x + enemy.width - tolerance && player1.x + player1.width - tolerance > enemy.x &&
         player1.y < enemy.y + enemy.height - tolerance && player1.height - tolerance + player1.y > enemy.y) {
-          player1.x = 252.5;
-          player1.y = 465;
-          player1.lives--;
-          lifeCount.textContent = player1.lives;
-      };
+        player1.x = 252.5;
+        player1.y = 465;
+        player1.lives--;
+        lifeCount.textContent = player1.lives;
+      }
     });
-  };
+  }
 
   render() {
     super.render();
@@ -122,7 +122,7 @@ class Player extends GameEntities {
       }
     }
   }
-};
+}
 
 // Gem class extends on GameEntities
 class Gem extends GameEntities {
@@ -132,31 +132,31 @@ class Gem extends GameEntities {
     this.x = 50.5 + Math.floor(Math.random() * 5) * 101;
     this.y = 135 + Math.floor(Math.random() * 3) * 83;
     this.count = 0;
-  };
+  }
 
   render() {
     super.render();
-  };
+  }
 
   update() {
     const tolerance = 45;
     const gem1 = this;
     if (this.x < player.x + player.width - tolerance && this.x + this.width - tolerance > player.x &&
       this.y < player.y + player.height - tolerance && this.height - tolerance + this.y > player.y) {
-        this.count++;
-        gemCount.textContent = this.count;
-        if (this.count >= 10) {
-          gemCountMessage.textContent = "Go to creek now!";
-        };
-        this.x = -300;
-        this.y = -300;
-        setTimeout(function() {
-            gem1.x = 50.5 + Math.floor(Math.random() * 5) * 101;
-            gem1.y = 135 + Math.floor(Math.random() * 3) * 83;
-        }, 3000);
-    };
-  };
-};
+      this.count++;
+      gemCount.textContent = this.count;
+      if (this.count >= 10) {
+        gemCountMessage.textContent = 'Go to creek now!';
+      }
+      this.x = -300;
+      this.y = -300;
+      setTimeout(() => {
+        gem1.x = 50.5 + Math.floor(Math.random() * 5) * 101;
+        gem1.y = 135 + Math.floor(Math.random() * 3) * 83;
+      }, 3000);
+    }
+  }
+}
 
 // Instantiating objects
 const player = new Player(252.5, 465);
@@ -168,57 +168,56 @@ newEnemies();
 
 function newEnemies() {
   let enemy;
-  let speedFactor = {
-    'Hard': 1000,
-    'Medium': 800,
-    'Easy': 600,
+  const speedFactor = {
+    Hard: 1000,
+    Medium: 800,
+    Easy: 600,
   };
   for (let i = 0; i < numEnemies[level]; i++) {
     enemy = new Enemy(-100, 135, 100, 79, 'images/enemy-bug.png', speedFactor[level], 3);
     allEnemies.push(enemy);
   }
-};
-
+}
 
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method.
-document.addEventListener('keyup', function(e) {
-    var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
-    };
-    player.handleInput(allowedKeys[e.keyCode]);
+document.addEventListener('keyup', (e) => {
+  const allowedKeys = {
+    37: 'left',
+    38: 'up',
+    39: 'right',
+    40: 'down',
+  };
+  player.handleInput(allowedKeys[e.keyCode]);
 
-    if (e.keyCode === 80) {
-      isPaused = !isPaused;
-      init();
-    };
+  if (e.keyCode === 80) {
+    isPaused = !isPaused;
+    init();
+  }
 });
 
 // Game State Function
 function gameState(condition, text) {
   if (condition) {
-    ctx.font = "50pt VT323";
-    ctx.textAlign = "center";
-    ctx.strokeStyle = "black";
+    ctx.font = '50pt VT323';
+    ctx.textAlign = 'center';
+    ctx.strokeStyle = 'black';
     ctx.lineWidth = 3;
-    ctx.fillStyle = "white";
+    ctx.fillStyle = 'white';
     ctx.fillText(text, 505 / 2, 606 / 2);
     ctx.strokeText(text, 505 / 2, 606 / 2);
-  };
-};
+  }
+}
 
 
 // Function that controls the game state when game is over
-function gameOver(){
+function gameOver() {
   if (gem.count >= 10 && player.y === 50) {
     isGameOver = true;
-    gameState(isGameOver, "YOU WON!");
+    gameState(isGameOver, 'YOU WON!');
   } else if (player.lives === 0) {
     isGameOver = true;
-    gameState(isGameOver, "YOU LOSE!");
-  };
-};
+    gameState(isGameOver, 'YOU LOSE!');
+  }
+}

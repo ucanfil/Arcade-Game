@@ -1,0 +1,28 @@
+{
+  "name": "arcade-game",
+  "version": "1.0.0",
+  "description": "This Classic Frogger Game project is made as part of Front-End Nanodegree by Udacity, in order to practice object-oriented programming concepts.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ucanfil/Arcade-Game.git"
+  },
+  "author": "Burak Tilek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ucanfil/Arcade-Game/issues"
+  },
+  "homepage": "https://github.com/ucanfil/Arcade-Game#readme",
+  "devDependencies": {
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0"
+  },
+  "dependencies": {}
+}
